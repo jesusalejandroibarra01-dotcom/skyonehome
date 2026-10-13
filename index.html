@@ -329,6 +329,17 @@ const EQUIPO = [
 const LOGROS = [
   {icono:"🏆", titulo:"Oficina Club One", detalle:"SkyOne Home alcanzó el Club One de la carrera inmobiliaria SkyOne."}
 ];
+// Asesores de la oficina que todavía no tienen captaciones publicadas (también se muestran)
+const ASESORES_SIN_CAPTACIONES = [
+  {e:"nataly-villanueva", n:"Nataly Villanueva"},
+  {e:"emilio-benitez", n:"Emilio Benítez"},
+  {e:"francisco-talavera", n:"Francisco Talavera"},
+  {e:"jose-martinez", n:"José Martínez"},
+  {e:"sara-chamorro", n:"Sara Chamorro"},
+  {e:"sergio-cabrera", n:"Sergio Cabrera"}
+];
+// Personas que ya aparecen en el equipo y no van en el listado de asesores
+const NO_SON_ASESORES = ["kathia-villasanti"];
 // Asesores que llegaron al Club One (escribí el nombre tal como aparece en la página)
 const ASESORES_CLUB_ONE = [];
 /* ======================================================================== */
@@ -400,7 +411,7 @@ function filtrar(){
 function renderKpis(){
   const v = PROPS.filter(p => p.op === "Venta").length, a = PROPS.length - v;
   const conProps = [...ASES.values()].filter(x => PROPS.some(p => p.ag === x.e)).length;
-  $("#kpis").innerHTML = `<div class="kpi"><b>${[...ASES.values()].filter(x => x.c || x.z).length}</b><span>Asesores</span></div>`;
+  $("#kpis").innerHTML = `<div class="kpi"><b>${[...ASES.values()].filter(x => (x.c || x.z || x.oficina) && !NO_SON_ASESORES.includes(x.e)).length}</b><span>Asesores</span></div>`;
 }
 function conteoAsesores(){
   const c = new Map(); for (const p of PROPS) c.set(p.ag, (c.get(p.ag) || 0) + 1);
@@ -451,7 +462,7 @@ function render(){
   const a = ST.ag ? ASES.get(ST.ag) : null;
   $("#cnt").textContent = a ? `${r.length} ${r.length === 1 ? "propiedad" : "propiedades"} de ${a.n}` : `${r.length} ${r.length === 1 ? "propiedad" : "propiedades"}`;
   $("#upd").textContent = ACTUALIZADO; $("#upd2").textContent = ACTUALIZADO;
-  $("#grid").innerHTML = r.length ? r.slice(0, ST.shown).map(card).join("") : '<div class="empty" style="grid-column:1/-1">No hay propiedades con estos filtros. Probá quitar alguno.</div>';
+  $("#grid").innerHTML = r.length ? r.slice(0, ST.shown).map(card).join("") : `<div class="empty" style="grid-column:1/-1">${ST.ag && !PROPS.some(p => p.ag === ST.ag) ? "Este asesor todavía no tiene propiedades publicadas." : "No hay propiedades con estos filtros. Probá quitar alguno."}</div>`;
   $("#moreBtn").hidden = r.length <= ST.shown;
   $("#moreBtn").textContent = `Ver más propiedades (${r.length - ST.shown} restantes)`;
   $$('#agents .ag').forEach(b => b.setAttribute("aria-pressed", String(b.dataset.ag === ST.ag)));
@@ -475,7 +486,7 @@ function renderPortada(){
   $("#logros").innerHTML = LOGROS.map(l => `<div class="lg gold"><span class="ic">${esc(l.icono || "🏆")}</span><b>${esc(l.titulo)}</b>${l.detalle ? `<p>${esc(l.detalle)}</p>` : ""}${l.fecha ? `<p>${esc(l.fecha)}</p>` : ""}</div>`).join("");
   $("#logrosSec").hidden = !LOGROS.length;
   // Asesores
-  const todos = [...ASES.values()].filter(a => a.c > 0 || a.z > 0).sort((a, b) => b.c - a.c || b.z - a.z);
+  const todos = [...ASES.values()].filter(a => (a.c > 0 || a.z > 0 || a.oficina) && !NO_SON_ASESORES.includes(a.e)).sort((a, b) => b.c - a.c || b.z - a.z);
   $("#people").innerHTML = todos.map(a => `<button class="pp" data-ag="${esc(a.e)}"><div class="ft">${a.foto ? `<img src="${fotoAs(a)}" alt="${esc(a.n)}" loading="lazy">` : esc(iniciales(a.n))}</div><div class="tx">${esClub(a) ? '<span class="club">🏆 Club One</span>' : ""}<b>${esc(a.n)}</b></div></button>`).join("");
 }
 function renderTodo(){ renderKpis(); renderAgents(); renderSelects(); renderPortada(); render(); }
@@ -598,6 +609,7 @@ $("#ofAddr").textContent = OFI_DIR; $("#ofAddr2").textContent = OFI_DIR;
     SNAP = await (await fetch("data.json?v=" + Date.now(), {cache:"no-store"})).json();
   }catch(e){ $("#cnt").textContent = "No se pudieron cargar las propiedades. Recargá la página."; return; }
   ASES = new Map(SNAP.asesores.map(a => [a.e, {...a, n: limpiarNombre(a.n)}]));
+  for (const x of ASESORES_SIN_CAPTACIONES) if (!ASES.has(x.e)) ASES.set(x.e, {e:x.e, n:x.n, c:0, z:0, foto:true, oficina:true});
   PROPS = SNAP.props; CIERRES = SNAP.cierres || [];
   const [f, h] = (SNAP.actualizado || "").split(" ");
   ACTUALIZADO = f ? `Actualizado el ${fechaTxt(f)}${h ? " a las " + h : ""}` : "";
