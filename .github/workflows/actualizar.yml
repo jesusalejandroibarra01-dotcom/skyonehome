@@ -27,7 +27,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install pillow
+      - run: pip install pillow "rembg[cpu]"
       - name: Leer captaciones y cierres de SkyOne Home
         run: python scripts/actualizar.py
       - name: Guardar memoria y fotos nuevas
