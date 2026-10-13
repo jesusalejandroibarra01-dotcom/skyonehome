@@ -72,6 +72,23 @@ def detalle(pid):
     }
 
 
+def fondo_blanco(im):
+    """Recorta a la persona y la pone sobre fondo blanco, en cuadrado de 480 px."""
+    from PIL import Image
+    try:
+        from rembg import remove, new_session
+        cut = remove(im, session=new_session("isnet-general-use"), post_process_mask=True)
+    except Exception:
+        w, h = im.size; m = min(w, h); top = (h - m) // 4 if h > w else 0
+        return im.crop(((w - m) // 2, top, (w - m) // 2 + m, top + m)).resize((480, 480))
+    w, h = im.size
+    x0, y0, x1, y1 = cut.getchannel("A").point(lambda a: 255 if a > 40 else 0).getbbox() or (0, 0, w, h)
+    side = int(max(x1 - x0, (y1 - y0) * 0.82) * 1.12); cx = (x0 + x1) // 2; top = max(0, y0 - int(side * 0.06))
+    blanco = Image.new("RGBA", cut.size, (255, 255, 255, 255)); blanco.alpha_composite(cut)
+    big = Image.new("RGB", (w + 2 * side, h + 2 * side), "white"); big.paste(blanco.convert("RGB"), (side, side))
+    return big.crop((cx - side // 2 + side, top + side, cx + side // 2 + side, top + 2 * side)).resize((480, 480), Image.LANCZOS)
+
+
 def foto_asesor(s, url):
     destino = os.path.join(FOTOS, s + ".jpg")
     if os.path.exists(destino) or not url:
@@ -82,8 +99,7 @@ def foto_asesor(s, url):
             try:
                 from PIL import Image
                 im = Image.open(io.BytesIO(b)).convert("RGB")
-                w, h = im.size; m = min(w, h); top = (h - m) // 4 if h > w else 0
-                im.crop(((w - m) // 2, top, (w - m) // 2 + m, top + m)).resize((240, 240)).save(destino, quality=82)
+                fondo_blanco(im).save(destino, quality=88)
             except ImportError:
                 open(destino, "wb").write(b)
             return
