@@ -227,7 +227,7 @@ footer img{height:28px}
 .people{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
 .pp{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;text-align:left;padding:0;display:flex;flex-direction:column}
 .pp:hover{border-color:var(--accent)}
-.pp .ft{aspect-ratio:1;background:var(--surface-2);display:grid;place-items:center;font-size:1.8rem;font-weight:800;color:var(--accent)}
+.pp .ft{aspect-ratio:1;background:#fff;display:grid;place-items:center;font-size:1.8rem;font-weight:800;color:var(--accent)}
 .pp .ft img{width:100%;height:100%;object-fit:cover}
 .pp .tx{padding:10px 12px 12px;display:flex;flex-direction:column;gap:2px}
 .pp b{font-size:.9rem;line-height:1.25}
@@ -476,7 +476,7 @@ function renderPortada(){
   $("#logrosSec").hidden = !LOGROS.length;
   // Asesores
   const todos = [...ASES.values()].filter(a => a.c > 0 || a.z > 0).sort((a, b) => b.c - a.c || b.z - a.z);
-  $("#people").innerHTML = todos.map(a => `<button class="pp" data-ag="${esc(a.e)}"><div class="ft">${a.foto ? `<img src="${fotoAs(a)}" alt="${esc(a.n)}" loading="lazy">` : esc(iniciales(a.n))}</div><div class="tx">${esClub(a) ? '<span class="club">🏆 Club One</span>' : ""}<b>${esc(a.n)}</b><span>${a.c} ${a.c === 1 ? "captación" : "captaciones"} · ${a.z} cierre${a.z === 1 ? "" : "s"}</span></div></button>`).join("");
+  $("#people").innerHTML = todos.map(a => `<button class="pp" data-ag="${esc(a.e)}"><div class="ft">${a.foto ? `<img src="${fotoAs(a)}" alt="${esc(a.n)}" loading="lazy">` : esc(iniciales(a.n))}</div><div class="tx">${esClub(a) ? '<span class="club">🏆 Club One</span>' : ""}<b>${esc(a.n)}</b></div></button>`).join("");
 }
 function renderTodo(){ renderKpis(); renderAgents(); renderSelects(); renderPortada(); render(); }
 
