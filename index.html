@@ -279,17 +279,8 @@ img.av{object-fit:cover}
   </section>
 
   <section class="blk" id="logrosSec">
-    <div class="blk-h"><div><span class="eyebrow">Logros de la oficina</span><h2>Lo que venimos construyendo</h2></div><p>Premiaciones y reconocimientos de la oficina, y los resultados que registra el sistema SkyOne.</p></div>
+    <div class="blk-h"><div><span class="eyebrow">Logros de la oficina</span><h2>Lo que venimos construyendo</h2></div></div>
     <div class="logros" id="logros"></div>
-  </section>
-
-  <section class="blk" id="exitos">
-    <div class="blk-h"><div><span class="eyebrow">Éxitos de nuestros asesores</span><h2>Los que más operaciones cerraron</h2></div><p>Propiedades vendidas y alquiladas registradas en el sistema, por asesor captador.</p></div>
-    <div class="podio" id="podio"></div>
-    <div class="duo">
-      <div class="panel"><h3>Últimos cierres</h3><div class="feed" id="feed"></div></div>
-      <div class="panel"><h3>Operaciones cerradas por mes</h3><div class="chart" id="chart"></div><p class="small">Últimos 12 meses.</p><h3 style="margin-top:6px">Ranking de cierres</h3><div class="rank" id="rankCierres" style="box-shadow:none;border:0;padding:0"></div></div>
-    </div>
   </section>
 
   <section class="blk" id="asesores">
@@ -409,7 +400,7 @@ function filtrar(){
 function renderKpis(){
   const v = PROPS.filter(p => p.op === "Venta").length, a = PROPS.length - v;
   const conProps = [...ASES.values()].filter(x => PROPS.some(p => p.ag === x.e)).length;
-  $("#kpis").innerHTML = `<div class="kpi"><b>${PROPS.length}</b><span>Captaciones en total</span></div><div class="kpi"><b>${v}</b><span>En venta</span></div><div class="kpi"><b>${a}</b><span>En alquiler</span></div><div class="kpi"><b>${CIERRES.length}</b><span>Operaciones cerradas</span></div><div class="kpi"><b>${[...ASES.values()].filter(x => x.c || x.z).length}</b><span>Asesores</span></div>`;
+  $("#kpis").innerHTML = `<div class="kpi"><b>${[...ASES.values()].filter(x => x.c || x.z).length}</b><span>Asesores</span></div>`;
 }
 function conteoAsesores(){
   const c = new Map(); for (const p of PROPS) c.set(p.ag, (c.get(p.ag) || 0) + 1);
@@ -480,32 +471,9 @@ function renderPortada(){
   const conFoto = [...ASES.values()].filter(a => a.foto).sort((x, y) => (y.c + y.z) - (x.c + x.z)).slice(0, 10);
   $("#mosaic").innerHTML = conFoto.map(a => `<img src="${fotoAs(a)}" alt="">`).join("");
   $("#team").innerHTML = EQUIPO.map(e => `<div class="tm"><div class="ft">${e.foto ? `<img src="${esc(e.foto)}" alt="${esc(e.n)}" loading="lazy">` : esc(iniciales(e.n))}</div><div class="tx"><b>${esc(e.n)}</b><span>${esc(e.r)}</span></div></div>`).join("");
-  // Logros
-  const porMes = {}; for (const c of CIERRES){ const k = (c.f || "").slice(0, 7); if (k) porMes[k] = (porMes[k] || 0) + 1; }
-  const mejor = Object.entries(porMes).sort((a, b) => b[1] - a[1] || b[0].localeCompare(a[0]))[0];
-  const anio = String(hoy.getFullYear()), cAnio = CIERRES.filter(c => (c.f || "").startsWith(anio)).length;
-  const ventas = CIERRES.filter(c => c.op === "Venta").length;
-  const auto = [
-    {big: CIERRES.length, b:"Operaciones cerradas", p:`${ventas} ventas y ${CIERRES.length - ventas} alquileres registrados en el sistema.`},
-    {big: cAnio, b:`Cierres en ${anio}`, p:"Familias e inversores que encontraron su propiedad este año."},
-    mejor ? {big: mejor[1], b:"Nuestro mejor mes", p:`${MESES[Number(mejor[0].slice(5)) - 1][0].toUpperCase() + MESES[Number(mejor[0].slice(5)) - 1].slice(1)} ${mejor[0].slice(0, 4)}: el mes con más operaciones cerradas.`} : null,
-    {big: PROPS.length, b:"Captaciones activas", p:"Propiedades disponibles hoy en venta y alquiler."}
-  ].filter(Boolean);
-  $("#logros").innerHTML = LOGROS.map(l => `<div class="lg gold"><span class="ic">${esc(l.icono || "🏆")}</span><b>${esc(l.titulo)}</b>${l.detalle ? `<p>${esc(l.detalle)}</p>` : ""}${l.fecha ? `<p>${esc(l.fecha)}</p>` : ""}</div>`).join("") +
-    auto.map(l => `<div class="lg"><span class="big">${nf(l.big)}</span><b>${l.b}</b><p>${l.p}</p></div>`).join("");
-  // Podio y ranking de cierres
-  const rk = [...ASES.values()].filter(a => a.z > 0).sort((a, b) => b.z - a.z || b.c - a.c);
-  const top = rk.slice(0, 3), orden = top.length === 3 ? [top[1], top[0], top[2]] : top;
-  $("#podio").innerHTML = orden.map(a => { const pos = top.indexOf(a) + 1; return `<button class="pd p${pos}" data-ag="${esc(a.e)}"><span class="pos">${pos}.º lugar</span>${avatar(a)}<b>${esc(a.n)}</b>${esClub(a) ? '<span class="club">🏆 Club One</span>' : ""}<em><strong>${a.z}</strong>operaciones cerradas</em></button>`; }).join("");
-  const mx = rk[0]?.z || 1;
-  $("#rankCierres").innerHTML = rk.slice(3, 13).map((a, i) => `<button class="rk" data-ag="${esc(a.e)}"><i>${i + 4}</i><b>${esc(a.n)}</b><em>${a.z}</em><span class="bar"><span style="width:${a.z / mx * 100}%"></span></span></button>`).join("");
-  // Últimos cierres
-  $("#feed").innerHTML = CIERRES.slice(0, 7).map(c => { const a = ASES.get(c.ag); const [y, m] = (c.f || "").split("-");
-    return `<div class="fd"><img class="im" src="${esc(c.img)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><div><b>${c.op === "Venta" ? "Venta cerrada" : "Alquiler cerrado"} · ${esc(c.tp)}</b><span>${esc([c.ba, CIUDAD_CANON[norm(c.c)] || c.c].filter(Boolean).join(", "))}${m ? " · " + MESES[Number(m) - 1] + " " + y : ""} · ${esc(a ? a.n : "")}</span></div>${avatar(a, "av avs")}</div>`; }).join("");
-  // Gráfico 12 meses
-  const meses = []; for (let i = 11; i >= 0; i--){ const d = new Date(hoy.getFullYear(), hoy.getMonth() - i, 1); const k = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`; meses.push([k, porMes[k] || 0, MESES[d.getMonth()].slice(0, 3)]); }
-  const mm = Math.max(1, ...meses.map(x => x[1]));
-  $("#chart").innerHTML = meses.map(([k, v, l]) => `<div title="${v} cierres"><em>${v || ""}</em><i style="height:${v / mm * 100}%"></i><span>${l}</span></div>`).join("");
+  // Logros (solo los cargados a mano)
+  $("#logros").innerHTML = LOGROS.map(l => `<div class="lg gold"><span class="ic">${esc(l.icono || "🏆")}</span><b>${esc(l.titulo)}</b>${l.detalle ? `<p>${esc(l.detalle)}</p>` : ""}${l.fecha ? `<p>${esc(l.fecha)}</p>` : ""}</div>`).join("");
+  $("#logrosSec").hidden = !LOGROS.length;
   // Asesores
   const todos = [...ASES.values()].filter(a => a.c > 0 || a.z > 0).sort((a, b) => b.c - a.c || b.z - a.z);
   $("#people").innerHTML = todos.map(a => `<button class="pp" data-ag="${esc(a.e)}"><div class="ft">${a.foto ? `<img src="${fotoAs(a)}" alt="${esc(a.n)}" loading="lazy">` : esc(iniciales(a.n))}</div><div class="tx">${esClub(a) ? '<span class="club">🏆 Club One</span>' : ""}<b>${esc(a.n)}</b><span>${a.c} ${a.c === 1 ? "captación" : "captaciones"} · ${a.z} cierre${a.z === 1 ? "" : "s"}</span></div></button>`).join("");
