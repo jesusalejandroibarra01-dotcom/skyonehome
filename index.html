@@ -319,7 +319,7 @@ img.av{object-fit:cover}
 <script>
 /* =================== DATOS DE LA OFICINA (editables) =================== */
 const OFI_DIR = "Mburucuyá · Auditores de la Guerra del Chaco, Asunción";
-const APERTURA = "";           // fecha de apertura AAAA-MM-DD (vacío = no mostrar)
+const APERTURA = "2025-06-01";           // fecha de apertura AAAA-MM-DD (vacío = no mostrar)
 const EQUIPO = [
   {n:"Ariel Almirón", r:"Broker Owner · TEAM MASSIMO", foto:"fotos/ariel-almiron.jpg"},
   {n:"Kathia Villasanti", r:"Broker Owner · Broker Manager", foto:"fotos/kathia-villasanti.jpg"},
@@ -477,7 +477,7 @@ function renderPortada(){
     const a = new Date(APERTURA + "T00:00"); let m = (hoy.getFullYear() - a.getFullYear()) * 12 + hoy.getMonth() - a.getMonth(); if (hoy.getDate() < a.getDate()) m--;
     const y = Math.floor(m / 12), r = m % 12;
     const t = [y ? `${y} año${y > 1 ? "s" : ""}` : "", r ? `${r} mes${r > 1 ? "es" : ""}` : ""].filter(Boolean).join(" y ") || "Recién abiertos";
-    $("#aniv").innerHTML = `<b>${t}</b> acompañando a familias e inversores`; $("#aniv").hidden = false;
+    const MESES=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"]; $("#aniv").innerHTML = `<b>${t}</b> operativos · desde ${MESES[a.getMonth()]} de ${a.getFullYear()}`; $("#aniv").hidden = false;
   }
   const conFoto = [...ASES.values()].filter(a => a.foto).sort((x, y) => (y.c + y.z) - (x.c + x.z)).slice(0, 10);
   $("#mosaic").innerHTML = conFoto.map(a => `<img src="${fotoAs(a)}" alt="">`).join("");
