@@ -199,6 +199,38 @@ footer img{height:28px}
 .lg p{font-size:.85rem;color:var(--muted)}
 .lg.gold{background:linear-gradient(150deg,#06326b,#0b4a9a);color:#fff;border:0}
 .lg.gold::before{background:#E7C46A}.lg.gold p{color:#C9D5E8}.lg.gold .big{color:#E7C46A}
+
+/* ---------- Instagram: momentos ---------- */
+.ig-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.ig-tabs button{font:inherit;font-size:.85rem;font-weight:700;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.ig-tabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.ig-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.ig-c{position:relative;aspect-ratio:4/5;border-radius:14px;overflow:hidden;border:0;padding:0;cursor:pointer;background:#0b1a33;box-shadow:var(--shadow);font:inherit;text-align:left}
+.ig-c img,.ig-c video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.ig-c:hover img,.ig-c:hover video{transform:scale(1.04)}
+.ig-c::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(3,12,28,.88))}
+.ig-c .t{position:absolute;left:12px;right:12px;bottom:11px;z-index:1;color:#fff;font-weight:800;font-size:.92rem;line-height:1.25}
+.ig-c .bd{position:absolute;top:10px;right:10px;z-index:1;display:flex;align-items:center;gap:4px;background:rgba(3,12,28,.62);color:#fff;font-size:.72rem;font-weight:700;padding:4px 8px;border-radius:999px;backdrop-filter:blur(4px)}
+.ig-c .ct{position:absolute;top:10px;left:10px;z-index:1;background:#E7C46A;color:#1b1400;font-size:.66rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:999px}
+.ig-c:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.ig-foot{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.ig-foot a,.ig-foot button{font:inherit;font-weight:700;font-size:.9rem;padding:10px 18px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);text-decoration:none;cursor:pointer}
+.ig-foot a.pri{background:linear-gradient(135deg,#833ab4,#e1306c 55%,#f77737);border:0;color:#fff}
+.igv{position:fixed;inset:0;z-index:80;background:rgba(2,8,20,.92);display:flex;align-items:center;justify-content:center;padding:16px}
+.igv[hidden]{display:none}
+.igv .box{display:grid;grid-template-columns:minmax(0,auto) minmax(260px,360px);gap:0;background:var(--surface);color:var(--fg);border-radius:18px;overflow:hidden;max-width:min(1040px,100%);max-height:calc(100dvh - 32px)}
+.igv .med{position:relative;background:#000;display:flex;align-items:center;justify-content:center;min-width:0}
+.igv .med img,.igv .med video{display:block;max-width:min(620px,100%);max-height:calc(100dvh - 32px);width:auto;height:auto}
+.igv .nav{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.88);color:#06326b;font-size:1.4rem;font-weight:800;cursor:pointer}
+.igv .nav.prev{left:10px}.igv .nav.next{right:10px}
+.igv .ctr{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.6);color:#fff;font-size:.75rem;padding:3px 9px;border-radius:999px}
+.igv .txt{padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
+.igv .txt h3{font-size:1.1rem;font-weight:800}
+.igv .txt p{white-space:pre-line;font-size:.88rem;color:var(--muted);line-height:1.55}
+.igv .txt a{align-self:flex-start;font-weight:700;font-size:.88rem;color:var(--accent)}
+.igv .x{position:absolute;top:14px;right:16px;width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:1.5rem;cursor:pointer;z-index:2}
+@media (max-width:760px){.ig-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.ig-c .t{font-size:.82rem}
+  .igv{padding:0}.igv .box{grid-template-columns:1fr;border-radius:0;max-height:100dvh;height:100dvh;overflow-y:auto}.igv .med img,.igv .med video{max-height:70dvh;max-width:100%}}
 .podio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:end}
 .pd{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 14px;text-align:center;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer}
 .pd:hover{border-color:var(--accent)}
@@ -283,6 +315,12 @@ img.av{object-fit:cover}
     <div class="logros" id="logros"></div>
   </section>
 
+  <section class="blk" id="momentos" hidden>
+    <div class="blk-h"><div><span class="eyebrow">Desde nuestro Instagram</span><h2>SkyOne Home en acción</h2></div><div class="ig-tabs" role="group" aria-label="Filtrar momentos"><button data-igf="todo" aria-pressed="true">Todo</button><button data-igf="logro" aria-pressed="false">🏆 Logros</button><button data-igf="actividad" aria-pressed="false">📸 Actividades</button></div></div>
+    <div class="ig-grid" id="igGrid"></div>
+    <div class="ig-foot"><button id="igMas" hidden>Ver más momentos</button><a class="pri" href="https://www.instagram.com/skyonehome/" target="_blank" rel="noopener">Seguinos en Instagram · @skyonehome</a></div>
+  </section>
+
   <section class="blk" id="asesores">
     <div class="blk-h"><div><span class="eyebrow">Nuestros asesores</span><h2>Conocé a quienes te acompañan</h2></div><p>Tocá un asesor para ver todas sus propiedades.</p></div>
     <div class="people" id="people"></div>
@@ -316,6 +354,10 @@ img.av{object-fit:cover}
 <div id="modalRoot"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<div class="igv" id="igv" hidden role="dialog" aria-modal="true" aria-label="Publicación de Instagram">
+  <button class="x" id="igvX" aria-label="Cerrar">×</button>
+  <div class="box"><div class="med" id="igvMed"></div><div class="txt" id="igvTxt"></div></div>
+</div>
 <script>
 /* =================== DATOS DE LA OFICINA (editables) =================== */
 const OFI_DIR = "Mburucuyá · Auditores de la Guerra del Chaco, Asunción";
@@ -602,6 +644,35 @@ document.addEventListener("touchstart", e => { if (e.target.closest(".gal")) tx 
 document.addEventListener("touchend", e => { if (tx == null) return; const dx = e.changedTouches[0].clientX - tx; tx = null; if (Math.abs(dx) > 40) irFoto(GAL.i + (dx < 0 ? 1 : -1)); }, {passive:true});
 window.addEventListener("hashchange", () => { const id = new URLSearchParams(location.hash.slice(1)).get("id"); if (id && (!GAL.p || GAL.p.id !== Number(id))) abrir(id, false); });
 
+/* ---------- Momentos de Instagram ---------- */
+const IG = {items:[], f:"todo", n:8, cur:null, i:0};
+const igEs = it => it.video ? `<span class="bd">▶ Video</span>` : (it.fotos && it.fotos.length > 1 ? `<span class="bd">▣ ${it.fotos.length}</span>` : "");
+function igRender(){
+  const lista = IG.items.filter(it => IG.f === "todo" || it.cat === IG.f);
+  $("#igGrid").innerHTML = lista.slice(0, IG.n).map(it => `<button class="ig-c" data-ig="${esc(it.id)}" aria-label="${esc(it.t)}">${it.video ? `<video src="${esc(it.video)}#t=0.1" poster="${esc(it.img)}" muted playsinline loop preload="none"></video>` : `<img src="${esc(it.img)}" alt="" loading="lazy">`}${it.cat === "logro" ? '<span class="ct">Logro</span>' : ""}${igEs(it)}<span class="t">${esc(it.t)}</span></button>`).join("");
+  $("#igMas").hidden = lista.length <= IG.n;
+  document.querySelectorAll("#igGrid video").forEach(v => { const c = v.closest(".ig-c"); c.addEventListener("mouseenter", () => { v.play().catch(() => {}); }); c.addEventListener("mouseleave", () => { v.pause(); }); });
+}
+function igMedia(){
+  const it = IG.cur, fotos = it.fotos && it.fotos.length ? it.fotos : [it.img];
+  if (it.video){ $("#igvMed").innerHTML = `<video src="${esc(it.video)}" poster="${esc(it.img)}" controls autoplay playsinline></video>`; return; }
+  const n = fotos.length;
+  $("#igvMed").innerHTML = `<img src="${esc(fotos[IG.i])}" alt="${esc(it.t)}">${n > 1 ? `<button class="nav prev" data-igm="-1" aria-label="Anterior">‹</button><button class="nav next" data-igm="1" aria-label="Siguiente">›</button><span class="ctr">${IG.i + 1} / ${n}</span>` : ""}`;
+}
+function igAbrir(id){
+  IG.cur = IG.items.find(x => x.id === id); if (!IG.cur) return; IG.i = 0;
+  igMedia();
+  $("#igvTxt").innerHTML = `<span class="eyebrow">${IG.cur.cat === "logro" ? "🏆 Logro" : "📸 Actividad"}</span><h3>${esc(IG.cur.t)}</h3>${IG.cur.cap ? `<p>${esc(IG.cur.cap)}</p>` : ""}<a href="${esc(IG.cur.url)}" target="_blank" rel="noopener">Ver en Instagram ↗</a>`;
+  $("#igv").hidden = false; document.body.style.overflow = "hidden";
+}
+function igCerrar(){ $("#igv").hidden = true; $("#igvMed").innerHTML = ""; document.body.style.overflow = ""; }
+$("#igGrid").addEventListener("click", e => { const b = e.target.closest("[data-ig]"); if (b) igAbrir(b.dataset.ig); });
+document.querySelectorAll("[data-igf]").forEach(b => b.addEventListener("click", () => { IG.f = b.dataset.igf; IG.n = 8; document.querySelectorAll("[data-igf]").forEach(x => x.setAttribute("aria-pressed", x === b)); igRender(); }));
+$("#igMas").addEventListener("click", () => { IG.n += 8; igRender(); });
+$("#igvX").addEventListener("click", igCerrar);
+$("#igv").addEventListener("click", e => { if (e.target.id === "igv") igCerrar(); const m = e.target.closest("[data-igm]"); if (m){ const n = IG.cur.fotos.length; IG.i = (IG.i + Number(m.dataset.igm) + n) % n; igMedia(); } });
+document.addEventListener("keydown", e => { if ($("#igv").hidden) return; if (e.key === "Escape") igCerrar(); if (IG.cur && !IG.cur.video && IG.cur.fotos && IG.cur.fotos.length > 1 && (e.key === "ArrowRight" || e.key === "ArrowLeft")){ const n = IG.cur.fotos.length; IG.i = (IG.i + (e.key === "ArrowRight" ? 1 : -1) + n) % n; igMedia(); } });
+fetch("instagram.json", {cache:"no-cache"}).then(r => r.json()).then(j => { IG.items = j.items || []; if (IG.items.length){ $("#momentos").hidden = false; igRender(); } }).catch(() => {});
 /* ---------- Inicio ---------- */
 $("#ofAddr").textContent = OFI_DIR; $("#ofAddr2").textContent = OFI_DIR;
 (async () => {
